@@ -81,4 +81,26 @@ class BarCreateView(ctx : Context) : View(ctx) {
             state.startUpdating(startcb)
         }
     }
+    data class Renderer(var view : BarCreateView, var time : Int = 0) {
+        val animator : Animator = Animator(view)
+        val barCreate : BarCreate = BarCreate(0)
+        fun render(canvas : Canvas, paint : Paint) {
+            if (time == 0) {
+                paint.color = Color.BLUE
+            }
+            canvas.drawColor(Color.parseColor("#212121"))
+            barCreate.draw(canvas, paint)
+            time++
+            animator.animate {
+                barCreate.update {
+                    animator.stop()
+                }
+            }
+        }
+        fun handleTap() {
+            barCreate.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
