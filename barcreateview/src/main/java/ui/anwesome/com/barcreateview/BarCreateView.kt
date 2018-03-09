@@ -62,4 +62,23 @@ class BarCreateView(ctx : Context) : View(ctx) {
             }
         }
     }
+    data class BarCreate(var i : Int) {
+        val state = State()
+        fun draw(canvas : Canvas, paint : Paint) {
+            val w = canvas.width.toFloat()
+            val h = canvas.height.toFloat()
+            val x = w/2 - (w/2)*state.scales[0]
+            val w1 = w/2 + (w/2)*state.scales[0]
+            val y_init = h/2 - h/20 + (h/10) * state.scales[1]
+            val y = y_init - (y_init)*state.scales[2]
+            val h1 = y + h/10 + ((h/5) * state.scales[1]) + (h - 3 * h / 10) * state.scales[3]
+            canvas.drawRect(RectF(x, y, w1, h1), paint)
+        }
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
+    }
 }
