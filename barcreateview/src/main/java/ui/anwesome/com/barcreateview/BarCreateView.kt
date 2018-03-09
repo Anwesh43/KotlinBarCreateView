@@ -7,12 +7,18 @@ import android.graphics.*
 import android.content.*
 import android.view.*
 class BarCreateView(ctx : Context) : View(ctx) {
+    val renderer = Renderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onTouchEvent(event : MotionEvent) : Boolean {
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                renderer.handleTap()
+            }
+        }
         return true
     }
     override fun onDraw(canvas : Canvas) {
-
+        renderer.render(canvas, paint)
     }
     data class State(var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0, var jDir : Int = 1) {
         val scales : Array<Float> = arrayOf(0f, 0f, 0f, 0f)
