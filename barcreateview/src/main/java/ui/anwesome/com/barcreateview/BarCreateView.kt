@@ -76,9 +76,9 @@ class BarCreateView(ctx : Context) : View(ctx) {
             val h = canvas.height.toFloat()
             val x = w/2 - (w/2)*state.scales[0]
             val w1 = w/2 + (w/2)*state.scales[0]
-            val y_init = h/2 - h/20 + (h/10) * state.scales[1]
+            val y_init = h/2 - h/100 - (h/30) * state.scales[1]
             val y = y_init - (y_init)*state.scales[2]
-            val h1 = y + h/10 + ((h/5) * state.scales[1]) + (h - 3 * h / 10) * state.scales[3]
+            val h1 = y + h/50 + ((h/15) * state.scales[1]) + (h - h/50 - h/15) * state.scales[3]
             canvas.drawRect(RectF(x, y, w1, h1), paint)
         }
         fun update(stopcb : (Float) -> Unit) {
@@ -93,7 +93,7 @@ class BarCreateView(ctx : Context) : View(ctx) {
         val barCreate : BarCreate = BarCreate(0)
         fun render(canvas : Canvas, paint : Paint) {
             if (time == 0) {
-                paint.color = Color.BLUE
+                paint.color = Color.parseColor("#3F51B5")
             }
             canvas.drawColor(Color.parseColor("#212121"))
             barCreate.draw(canvas, paint)
