@@ -3,6 +3,7 @@ package ui.anwesome.com.barcreateview
 /**
  * Created by anweshmishra on 10/03/18.
  */
+import android.app.Activity
 import android.graphics.*
 import android.content.*
 import android.view.*
@@ -107,6 +108,13 @@ class BarCreateView(ctx : Context) : View(ctx) {
             barCreate.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity : Activity) : BarCreateView {
+            val view = BarCreateView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
