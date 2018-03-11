@@ -7,7 +7,7 @@ import android.app.Activity
 import android.graphics.*
 import android.content.*
 import android.view.*
-class BarCreateView(ctx : Context) : View(ctx) {
+class BarCreateView(ctx : Context, var text : String = "hello") : View(ctx) {
     val renderer = Renderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onTouchEvent(event : MotionEvent) : Boolean {
@@ -22,7 +22,7 @@ class BarCreateView(ctx : Context) : View(ctx) {
         renderer.render(canvas, paint)
     }
     data class State(var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0, var jDir : Int = 1) {
-        val scales : Array<Float> = arrayOf(0f, 0f, 0f, 0f)
+        val scales : Array<Float> = arrayOf(0f, 0f, 0f, 0f, 0f)
         fun update(stopcb : (Float) -> Unit) {
             scales[j] += 0.1f * dir
             if (Math.abs(scales[j] - prevScale) > 1) {
@@ -69,7 +69,7 @@ class BarCreateView(ctx : Context) : View(ctx) {
             }
         }
     }
-    data class BarCreate(var i : Int) {
+    data class BarCreate(var i : Int, var text : String) {
         val state = State()
         fun draw(canvas : Canvas, paint : Paint) {
             val w = canvas.width.toFloat()
@@ -80,6 +80,8 @@ class BarCreateView(ctx : Context) : View(ctx) {
             val y = y_init - (y_init)*state.scales[2]
             val h1 = y + h/50 + ((h/15) * state.scales[1]) + (h - h/50 - h/15) * state.scales[3]
             canvas.drawRect(RectF(x, y, w1, h1), paint)
+            val text_scale = state.scales[4]
+            canvas.drawScaleRotateText(text, x, y, w, h, text_scale, paint)
         }
         fun update(stopcb : (Float) -> Unit) {
             state.update(stopcb)
@@ -90,7 +92,7 @@ class BarCreateView(ctx : Context) : View(ctx) {
     }
     data class Renderer(var view : BarCreateView, var time : Int = 0) {
         val animator : Animator = Animator(view)
-        val barCreate : BarCreate = BarCreate(0)
+        val barCreate : BarCreate = BarCreate(0, view.text)
         fun render(canvas : Canvas, paint : Paint) {
             if (time == 0) {
                 paint.color = Color.parseColor("#3F51B5")
@@ -117,4 +119,15 @@ class BarCreateView(ctx : Context) : View(ctx) {
             return view
         }
     }
+}
+fun Canvas.drawScaleRotateText(text : String, x : Float, y: Float, w: Float, h : Float, text_scale : Float, paint : Paint) {
+    save()
+    translate(x + w/2, y+h/2)
+    rotate(360f * text_scale)
+    scale(text_scale, text_scale)
+    paint.color = Color.argb((255 * text_scale).toInt(), 255, 255, 255)
+    paint.textSize = Math.min(w,h)/30
+    val tw = paint.measureText(text)
+    drawText(text, -tw/2, paint.textSize/2, paint)
+    restore()
 }
