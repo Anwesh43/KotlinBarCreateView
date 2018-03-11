@@ -79,6 +79,7 @@ class BarCreateView(ctx : Context, var text : String = "hello") : View(ctx) {
             val y_init = h/2 - h/100 - (h/30) * state.scales[1]
             val y = y_init - (y_init)*state.scales[2]
             val h1 = y + h/50 + ((h/15) * state.scales[1]) + (h - h/50 - h/15) * state.scales[3]
+            paint.color = Color.parseColor("#3F51B5")
             canvas.drawRect(RectF(x, y, w1, h1), paint)
             val text_scale = state.scales[4]
             canvas.drawScaleRotateText(text, x, y, w, h, text_scale, paint)
@@ -94,9 +95,6 @@ class BarCreateView(ctx : Context, var text : String = "hello") : View(ctx) {
         val animator : Animator = Animator(view)
         val barCreate : BarCreate = BarCreate(0, view.text)
         fun render(canvas : Canvas, paint : Paint) {
-            if (time == 0) {
-                paint.color = Color.parseColor("#3F51B5")
-            }
             canvas.drawColor(Color.parseColor("#212121"))
             barCreate.draw(canvas, paint)
             time++
@@ -126,7 +124,7 @@ fun Canvas.drawScaleRotateText(text : String, x : Float, y: Float, w: Float, h :
     rotate(360f * text_scale)
     scale(text_scale, text_scale)
     paint.color = Color.argb((255 * text_scale).toInt(), 255, 255, 255)
-    paint.textSize = Math.min(w,h)/30
+    paint.textSize = h/10
     val tw = paint.measureText(text)
     drawText(text, -tw/2, paint.textSize/2, paint)
     restore()
